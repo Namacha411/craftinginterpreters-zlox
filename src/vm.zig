@@ -6,9 +6,10 @@ const is_debug = (@import("builtin").mode == std.builtin.OptimizeMode.Debug);
 const Chunk = @import("chunk.zig").Chunk;
 const Value = @import("chunk.zig").Value;
 const OpCode = @import("chunk.zig").OpCode;
+const compile = @import("compiler.zig").compile;
 const debug = @import("debug.zig");
 
-const InterpretResult = enum {
+pub const InterpretResult = enum {
     ok,
     compile_error,
     runtime_error,
@@ -33,11 +34,10 @@ pub const Vm = struct {
         _ = self;
     }
 
-    pub fn interpret(self: *Vm, chunk: *Chunk) !InterpretResult {
-        self.chunk = chunk;
-        self.code = chunk.code.items;
-        self.ip = 0;
-        return self.run();
+    pub fn interpret(self: *Vm, source: []const u8) !InterpretResult {
+        _ = self;
+        compile(source);
+        return InterpretResult.ok;
     }
 
     fn readByte(self: *Vm) u8 {
